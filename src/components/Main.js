@@ -1,8 +1,9 @@
-import React, { Component, useEffect, useState } from 'react';
-import { Row, Col } from 'antd';
+import React, { Component } from 'react';
+import { Row, Col } from 'antd'
 import axios from 'axios';
 import SatSetting from './SatSetting';
 import SatelliteList from './SatelliteList';
+import WorldMap from './WorldMap';
 import { BASE_URL, NEARBY_SATELLITE, SAT_API_KEY, STARLINK_CATEGORY } from "../constants";
 
 // const Main = () => {
@@ -25,20 +26,16 @@ import { BASE_URL, NEARBY_SATELLITE, SAT_API_KEY, STARLINK_CATEGORY } from "../c
 //     )
 // }
 
+
 class Main extends Component {
     constructor() {
         super();
         this.state = {
             satInfo: null,
-            settings: null,
             isLoadingList: false
         };
     }
-
     showNearbySatellite = (setting) => {
-        this.setState({
-            settings: setting
-        })
         this.fetchSatellite(setting);
     }
 
@@ -52,7 +49,7 @@ class Main extends Component {
 
         axios.get(url)
             .then(response => {
-                // console.log(response.data)
+                console.log(response.data)
                 this.setState({
                     satInfo: response.data,
                     isLoadingList: false
@@ -63,18 +60,24 @@ class Main extends Component {
             })
     }
 
+    showMap = () => {
+        console.log('show on the map');
+    }
+
     render() {
-        const { satInfo, isLoadingList } = this.state;
+        const { satInfo } = this.state;
         return (
-            <Row className='main'>
-                <Col span={8} className='left-side'>
+            <Row className="main">
+                <Col span={8} className="left-side">
                     <SatSetting onShow={this.showNearbySatellite} />
-                    <SatelliteList satInfo={satInfo}
-                        isLoad={isLoadingList}
+                    <SatelliteList
+                        satInfo={satInfo}
+                        isLoad={this.state.isLoadingList}
+                        onShowMap={this.showMap}
                     />
                 </Col>
                 <Col span={16} className="right-side">
-                    right
+                    <WorldMap />
                 </Col>
             </Row>
         );
